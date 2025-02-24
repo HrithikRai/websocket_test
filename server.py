@@ -30,15 +30,12 @@ chat = ChatCohere(cohere_api_key=cohere_api_key)
 str_out = StrOutputParser()
 
 prompt_template = PromptTemplate(
-    input_variables=["history", "context", "question"],
+    input_variables=["context", "question"],
     template="""
 You are a really sympathetic and caring medical assistant for question-answering tasks. 
 Your name is 'Eva'. Use the following pieces of retrieved context to answer the question. 
 If you don't know the answer, just say that you don't know. 
 
-### Conversation History:
-{history}
-
 ### Retrieved Context:
 {context}
 
@@ -49,32 +46,9 @@ If you don't know the answer, just say that you don't know.
 """
 )
 
-from langchain.memory import ConversationBufferMemory
-
-prompt_template = PromptTemplate(
-    input_variables=["history", "context", "question"],
-    template="""
-You are a really sympathetic and caring medical assistant for question-answering tasks. 
-Your name is 'Eva'. Use the following pieces of retrieved context to answer the question. 
-If you don't know the answer, just say that you don't know. Also just stick to the point and give concise and short answers.
-
-### Conversation History:
-{history}
-
-### Retrieved Context:
-{context}
-
-### User Question:
-{question}
-
-### Eva's Response:
-"""
-)
 from langchain.schema.runnable import RunnablePassthrough, RunnableLambda
-memory = ConversationBufferMemory(memory_key="history", return_messages=True)
 chain = (
     {
-        "history": RunnableLambda(lambda x: memory.load_memory_variables(x)["history"]),
         "context": retriever,
         "question": RunnablePassthrough()
     }
