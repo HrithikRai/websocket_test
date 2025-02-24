@@ -1,0 +1,16 @@
+uvicorn
+websockets
+asyncio
+fastapi
+langchain
+dotenv
+langchain_cohere
+langchain_core
+tomli
+chromadb
+
+
+
+
+
+
